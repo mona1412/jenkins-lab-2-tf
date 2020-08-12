@@ -6,13 +6,13 @@ pipeline {
     }
   }
   environment {
-    CREDS = credentials('aws-creds')
+    CREDS = credentials('mona-tf')
     AWS_ACCESS_KEY_ID = "${CREDS_USR}"
     AWS_SECRET_ACCESS_KEY = "${CREDS_PSW}"
-    OWNER = "bryan"
+    OWNER = "mona"
     PROJECT_NAME = 'web-server'
     AWS_PROFILE="kh-labs"
-    TF_NAMESPACE="bryan"
+    TF_NAMESPACE="mona"
   }
   stages {
       stage("init") {
