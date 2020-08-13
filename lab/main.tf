@@ -172,6 +172,12 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true
   tags                        = module.tags_webserver.tags
   depends_on                  = [aws_instance.api]
+  user_data = <<-EOF
+          #!/bin/bash
+          echo " ${aws_instance.api.0.public_ip}" > /home/ubuntu/public-ip.txt
+          cat /home/ubuntu/public-ip.txt
+          EOF
+
 }
 
 resource "aws_instance" "api" {
@@ -183,6 +189,19 @@ resource "aws_instance" "api" {
   key_name                    = aws_key_pair.lab_keypair.id
   associate_public_ip_address = true
   tags                        = module.tags_webserver.tags
+}
+
+module "tags_api" {
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git"
+  namespace   = var.name
+  environment = "dev"
+  name        = "api-devops-bootcamp"
+  delimiter   = "_"
+ 
+  tags = {
+    owner = var.name
+    type  = "api"
+  }
 }
 
 resource "aws_instance" "bastion" {
